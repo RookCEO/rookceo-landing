@@ -87,7 +87,7 @@
       flex-wrap: wrap;
       justify-content: center;
     }
-    .waitlist-form input[type="email"] {
+    .waitlist-form input {
       flex: 1;
       min-width: 220px;
       padding: 0.75rem 1rem;
@@ -110,10 +110,29 @@
       font-size: 0.9rem;
       font-weight: bold;
       cursor: pointer;
-      white-space: nowrap;
     }
     .waitlist-form button:hover { background: #d4b060; }
+    .waitlist-form button:disabled { opacity: 0.6; cursor: not-allowed; }
     .form-note { font-family: var(--mono); font-size: 0.75rem; color: var(--gray); }
+    .form-success {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 4px;
+      padding: 1rem;
+      max-width: 440px;
+      margin: 0 auto 0.75rem;
+      display: none;
+    }
+    .form-error {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: #e07070;
+      max-width: 440px;
+      margin: 0 auto;
+      display: none;
+    }
 
     /* ── Divider ── */
     .divider { border: none; border-top: 1px solid rgba(201,168,76,0.15); margin: 3.5rem auto; max-width: 900px; }
@@ -208,10 +227,14 @@
       Rook monitors your email, researches your competitors, drafts your content,
       and sends you a daily briefing. Not suggestions — real autonomous work.
     </p>
-    <form class="waitlist-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-      <input type="email" name="email" placeholder="your@email.com" required>
-      <button type="submit">Get Early Access</button>
+    <form class="waitlist-form" id="waitlist-form">
+      <input type="email" id="email" placeholder="your@email.com" required>
+      <button type="submit" id="submit-btn">Get Early Access</button>
     </form>
+    <div class="form-success" id="form-success">
+      You're on the list. We'll be in touch when spots open.
+    </div>
+    <div class="form-error" id="form-error"></div>
     <p class="form-note">No spam. Notified when spots open. Cancel anytime.</p>
   </section>
 
@@ -276,8 +299,44 @@
   </section>
 
   <footer>
-    <p>© 2026 Rook · <a href="mailto:hello@rookceo.com">hello@rookceo.com</a></p>
+    <p>© 2026 Rook · <a href="mailto:rook@rookceo.com">rook@rookceo.com</a></p>
   </footer>
+
+  <script>
+    document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const btn       = document.getElementById('submit-btn');
+      const success   = document.getElementById('form-success');
+      const error     = document.getElementById('form-error');
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+      error.style.display = 'none';
+
+      try {
+        const res = await fetch('https://erpnext.datanovaconsulting.com/api/method/join_waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+
+        const data = await res.json();
+        if (res.ok && (data.message?.status === 'ok' || data.message?.status === 'exists')) {
+          this.style.display = 'none';
+          success.style.display = 'block';
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        error.textContent = 'Something went wrong. Please email rook@rookceo.com directly.';
+        error.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Get Early Access';
+      }
+    });
+  </script>
 
 </body>
 </html>
