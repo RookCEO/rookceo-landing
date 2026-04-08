@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rook — The AI CEO for Your Business</title>
+  <script async src="https://umami.datanovaconsulting.com/script.js" data-website-id="4b3a6b6a-385c-4146-87b6-1a603f1384e9"></script>
   <meta name="description" content="Rook is an AI that actually runs your business. Email monitoring, competitor research, content drafting, daily briefings. Your own private AI CEO for $49/month.">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -312,36 +313,16 @@
       const error     = document.getElementById('form-error');
 
       btn.disabled = true;
-      btn.textContent = 'Securing your spot…';
       error.style.display = 'none';
-      let dots = 0;
-      const pulse = setInterval(() => {
-        dots = (dots + 1) % 4;
-        btn.textContent = 'Securing your spot' + '…'.repeat(dots || 1);
-      }, 600);
 
-      try {
-        const res = await fetch('https://erpnext.datanovaconsulting.com/api/method/join_waitlist', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email })
-        });
+      fetch('https://erpnext.datanovaconsulting.com/api/method/join_waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      }).catch(() => {});
 
-        const data = await res.json();
-        clearInterval(pulse);
-        if (res.ok && (data.message?.status === 'ok' || data.message?.status === 'exists')) {
-          this.style.display = 'none';
-          success.style.display = 'block';
-        } else {
-          throw new Error();
-        }
-      } catch (err) {
-        clearInterval(pulse);
-        error.textContent = 'Something went wrong. Please email rook@rookceo.com directly.';
-        error.style.display = 'block';
-        btn.disabled = false;
-        btn.textContent = 'Get Early Access';
-      }
+      this.style.display = 'none';
+      success.style.display = 'block';
     });
   </script>
 
