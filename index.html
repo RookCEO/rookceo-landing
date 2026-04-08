@@ -312,8 +312,13 @@
       const error     = document.getElementById('form-error');
 
       btn.disabled = true;
-      btn.textContent = 'Submitting…';
+      btn.textContent = 'Securing your spot…';
       error.style.display = 'none';
+      let dots = 0;
+      const pulse = setInterval(() => {
+        dots = (dots + 1) % 4;
+        btn.textContent = 'Securing your spot' + '…'.repeat(dots || 1);
+      }, 600);
 
       try {
         const res = await fetch('https://erpnext.datanovaconsulting.com/api/method/join_waitlist', {
@@ -323,6 +328,7 @@
         });
 
         const data = await res.json();
+        clearInterval(pulse);
         if (res.ok && (data.message?.status === 'ok' || data.message?.status === 'exists')) {
           this.style.display = 'none';
           success.style.display = 'block';
@@ -330,6 +336,7 @@
           throw new Error();
         }
       } catch (err) {
+        clearInterval(pulse);
         error.textContent = 'Something went wrong. Please email rook@rookceo.com directly.';
         error.style.display = 'block';
         btn.disabled = false;
