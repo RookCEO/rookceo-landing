@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rook — The AI CEO for Your Business</title>
+  <meta name="description" content="Rook is an AI that actually runs your business. Email monitoring, competitor research, content drafting, daily briefings. Your own private AI CEO for $49/month.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0f1b2d;
+      --blue: #1a3a5c;
+      --gold: #c9a84c;
+      --white: #f5f0e8;
+      --gray: #8a9bb0;
+      --font: 'Georgia', serif;
+      --mono: 'Courier New', monospace;
+    }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: var(--font);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 2rem;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .logo { font-size: 1.4rem; font-weight: bold; color: var(--gold); letter-spacing: 0.05em; }
+    .nav-cta {
+      background: var(--gold);
+      color: var(--navy);
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 5rem 1.5rem 3rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 0.25rem 0.75rem;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.12em;
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+      color: var(--white);
+    }
+    h1 span { color: var(--gold); }
+    .subhead {
+      font-size: 1.15rem;
+      color: var(--gray);
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+    }
+
+    /* ── Waitlist form ── */
+    .waitlist-form {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 440px;
+      margin: 0 auto 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .waitlist-form input[type="email"] {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .waitlist-form input::placeholder { color: var(--gray); }
+    .waitlist-form button {
+      padding: 0.75rem 1.5rem;
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .waitlist-form button:hover { background: #d4b060; }
+    .form-note { font-family: var(--mono); font-size: 0.75rem; color: var(--gray); }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1px solid rgba(201,168,76,0.15); margin: 3.5rem auto; max-width: 900px; }
+
+    /* ── Features ── */
+    .features {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .features h2 { text-align: center; font-size: 1.6rem; margin-bottom: 2.5rem; color: var(--gold); }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 6px;
+      padding: 1.5rem;
+    }
+    .feature-card .icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .feature-card h3 { font-size: 1rem; color: var(--white); margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.875rem; color: var(--gray); }
+
+    /* ── Pricing ── */
+    .pricing {
+      max-width: 480px;
+      margin: 3.5rem auto;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+    .pricing h2 { font-size: 1.6rem; margin-bottom: 2rem; color: var(--gold); }
+    .price-card {
+      background: rgba(201,168,76,0.06);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 2.5rem 2rem;
+    }
+    .price-tag { font-size: 3rem; font-weight: bold; color: var(--gold); }
+    .price-tag span { font-size: 1rem; color: var(--gray); }
+    .price-label { font-family: var(--mono); font-size: 0.8rem; color: var(--gray); margin-bottom: 1.5rem; }
+    .feature-list { list-style: none; text-align: left; margin-bottom: 2rem; }
+    .feature-list li {
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      color: var(--white);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .feature-list li::before { content: "✓"; color: var(--gold); flex-shrink: 0; }
+    .price-cta {
+      display: block;
+      background: var(--gold);
+      color: var(--navy);
+      padding: 0.9rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+    .price-cta:hover { background: #d4b060; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--gray);
+      border-top: 1px solid rgba(201,168,76,0.1);
+      margin-top: 4rem;
+    }
+    footer a { color: var(--gray); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">ROOK</div>
+    <a class="nav-cta" href="#waitlist">Join Waitlist</a>
+  </nav>
+
+  <section class="hero" id="waitlist">
+    <div class="badge">COMING SOON</div>
+    <h1>The AI that <span>actually runs</span> your business</h1>
+    <p class="subhead">
+      Rook monitors your email, researches your competitors, drafts your content,
+      and sends you a daily briefing. Not suggestions — real autonomous work.
+    </p>
+    <form class="waitlist-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <input type="email" name="email" placeholder="your@email.com" required>
+      <button type="submit">Get Early Access</button>
+    </form>
+    <p class="form-note">No spam. Notified when spots open. Cancel anytime.</p>
+  </section>
+
+  <hr class="divider">
+
+  <section class="features">
+    <h2>What Rook does</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">📧</div>
+        <h3>Email Monitoring</h3>
+        <p>Reads your inbox, flags what's urgent, drafts responses to inquiries. Runs every 5 minutes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔍</div>
+        <h3>Competitor Research</h3>
+        <p>Weekly report on what your competitors are doing — pricing, content, positioning changes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📝</div>
+        <h3>Content Drafting</h3>
+        <p>Scripts, social posts, emails. Rook writes in your voice so you spend time editing, not starting.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h3>Daily Business Briefing</h3>
+        <p>Every morning: what happened, what needs attention, what Rook did while you slept.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🤖</div>
+        <h3>Scheduled Autonomous Tasks</h3>
+        <p>Set it and forget it. Rook runs daily and weekly tasks without being prompted.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔒</div>
+        <h3>Your Private Instance</h3>
+        <p>Fully isolated. Rook learns your business, remembers everything, serves no one else.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="pricing">
+    <h2>Simple pricing</h2>
+    <div class="price-card">
+      <div class="price-tag">$49<span>/month</span></div>
+      <div class="price-label">ROOK CEO — everything included</div>
+      <ul class="feature-list">
+        <li>Your own private Rook instance</li>
+        <li>Full persistent memory — never forgets</li>
+        <li>Email monitoring + response drafting</li>
+        <li>Daily business briefing</li>
+        <li>Competitor monitoring (weekly)</li>
+        <li>Scheduled autonomous tasks</li>
+        <li>Web research on demand</li>
+        <li>Private CEO Discord community</li>
+        <li>Ready in under 5 minutes</li>
+        <li>Cancel anytime</li>
+      </ul>
+      <a class="price-cta" href="#waitlist">Join the Waitlist →</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Rook · <a href="mailto:hello@rookceo.com">hello@rookceo.com</a></p>
+  </footer>
+
+</body>
+</html>
