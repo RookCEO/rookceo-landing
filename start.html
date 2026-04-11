@@ -210,7 +210,8 @@
       text-align: center;
     }
     .form-success,
-    .form-error {
+    .form-error,
+    .form-info {
       display: none;
       margin-top: 1rem;
       border-radius: 10px;
@@ -222,6 +223,11 @@
       color: var(--gold);
       border: 1px solid rgba(201,168,76,0.35);
       background: rgba(201,168,76,0.06);
+    }
+    .form-info {
+      color: #b8c9dd;
+      border: 1px solid rgba(138,155,176,0.3);
+      background: rgba(138,155,176,0.08);
     }
     .form-error {
       color: #f0a1a1;
@@ -265,7 +271,7 @@
       <section class="signup-panel">
         <div class="signup-card">
           <h2>Join the waitlist</h2>
-          <p>Use Google for the fastest path, or enter your email manually.</p>
+          <p>Use Google for the fastest path, or enter your name and email manually.</p>
 
           <button type="button" class="google-btn" id="google-btn">
             <span>G</span>
@@ -275,6 +281,7 @@
           <div class="or-divider">or join with email</div>
 
           <form class="waitlist-form" id="waitlist-form">
+            <input type="text" id="name" placeholder="Your name">
             <input type="email" id="email" placeholder="your@email.com" required>
             <button type="submit" class="primary-btn" id="submit-btn">Start Up</button>
           </form>
@@ -282,6 +289,7 @@
           <div class="form-success" id="form-success">
             You're on the list. We'll be in touch when your Rook CEO early access spot is ready.
           </div>
+          <div class="form-info" id="form-info"></div>
           <div class="form-error" id="form-error"></div>
           <p class="fine-print">Launch price: $25/month. No spam, just the next step when spots open.</p>
         </div>
@@ -294,37 +302,79 @@
     const WAITLIST_ENDPOINT = 'https://erpnext.datanovaconsulting.com/api/method/join_waitlist';
 
     const form = document.getElementById('waitlist-form');
+    const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
     const submitBtn = document.getElementById('submit-btn');
     const googleBtn = document.getElementById('google-btn');
     const success = document.getElementById('form-success');
+    const info = document.getElementById('form-info');
     const error = document.getElementById('form-error');
+
+    function resetMessages() {
+      success.style.display = 'none';
+      info.style.display = 'none';
+      error.style.display = 'none';
+    }
 
     function setLoading(isLoading) {
       submitBtn.disabled = isLoading;
       googleBtn.disabled = isLoading;
-      error.style.display = 'none';
+      if (isLoading) resetMessages();
     }
 
-    function showSuccess() {
+    function showSuccess(message) {
       form.style.display = 'none';
       googleBtn.style.display = 'none';
       document.querySelector('.or-divider').style.display = 'none';
+      success.textContent = message;
       success.style.display = 'block';
+    }
+
+    function showInfo(message) {
+      info.textContent = message;
+      info.style.display = 'block';
+    }
+
+    function showError(message) {
+      error.textContent = message;
+      error.style.display = 'block';
     }
 
     async function submitLead(payload) {
       setLoading(true);
       try {
-        await fetch(WAITLIST_ENDPOINT, {
+        const response = await fetch(WAITLIST_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        showSuccess();
+
+        const data = await response.json().catch(() => ({}));
+        const status = data?.message?.status;
+
+        if (status === 'ok') {
+          showSuccess("You're on the list. We'll be in touch when your Rook CEO early access spot is ready.");
+          return;
+        }
+
+        if (status === 'exists') {
+          showInfo("You're already on the list with that email. We'll be in touch when your Rook CEO spot is ready.");
+          return;
+        }
+
+        if (status === 'error') {
+          showError('Please enter a valid email address.');
+          return;
+        }
+
+        if (!response.ok) {
+          showError('Something went wrong. Please try again.');
+          return;
+        }
+
+        showSuccess("You're on the list. We'll be in touch when your Rook CEO early access spot is ready.");
       } catch (e) {
-        error.textContent = 'Something went wrong. Please try again.';
-        error.style.display = 'block';
+        showError('Something went wrong. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -333,9 +383,14 @@
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       const email = emailInput.value.trim();
-      if (!email) return;
+      const name = nameInput.value.trim();
+      if (!email) {
+        showError('Please enter a valid email address.');
+        return;
+      }
       await submitLead({
         email,
+        name,
         source: 'rookceo-start-email'
       });
     });
@@ -351,12 +406,11 @@
         const profile = decodeJwt(response.credential);
         await submitLead({
           email: profile.email,
-          name: profile.name,
+          name: profile.name || '',
           source: 'rookceo-start-google'
         });
       } catch (e) {
-        error.textContent = 'Google sign-in failed. Please use email instead.';
-        error.style.display = 'block';
+        showError('Google sign-in failed. Please use email instead.');
         setLoading(false);
       }
     }
