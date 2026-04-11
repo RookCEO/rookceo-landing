@@ -387,7 +387,7 @@
       await submitLead({
         email,
         name,
-        source: 'rookceo-start-email'
+        source: 'Website'
       });
     });
 
@@ -403,7 +403,7 @@
         await submitLead({
           email: profile.email,
           name: profile.name || '',
-          source: 'rookceo-start-google'
+          source: 'Website'
         });
       } catch (e) {
         showError('Google sign-in failed. Please use email instead.');
