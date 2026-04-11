@@ -273,15 +273,12 @@
           <h2>Join the waitlist</h2>
           <p>Use Google for the fastest path, or enter your name and email manually.</p>
 
-          <button type="button" class="google-btn" id="google-btn">
-            <span>G</span>
-            <span>Continue with Google</span>
-          </button>
+          <div id="google-signin-slot"></div>
 
           <div class="or-divider">or join with email</div>
 
           <form class="waitlist-form" id="waitlist-form">
-            <input type="text" id="name" placeholder="Your name">
+            <input type="text" id="name" placeholder="name">
             <input type="email" id="email" placeholder="your@email.com" required>
             <button type="submit" class="primary-btn" id="submit-btn">Start Up</button>
           </form>
@@ -305,7 +302,7 @@
     const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
     const submitBtn = document.getElementById('submit-btn');
-    const googleBtn = document.getElementById('google-btn');
+    const googleSlot = document.getElementById('google-signin-slot');
     const success = document.getElementById('form-success');
     const info = document.getElementById('form-info');
     const error = document.getElementById('form-error');
@@ -318,13 +315,12 @@
 
     function setLoading(isLoading) {
       submitBtn.disabled = isLoading;
-      googleBtn.disabled = isLoading;
       if (isLoading) resetMessages();
     }
 
     function showSuccess(message) {
       form.style.display = 'none';
-      googleBtn.style.display = 'none';
+      googleSlot.style.display = 'none';
       document.querySelector('.or-divider').style.display = 'none';
       success.textContent = message;
       success.style.display = 'block';
@@ -424,10 +420,13 @@
         cancel_on_tap_outside: true
       });
 
-      googleBtn.addEventListener('click', function() {
-        setLoading(true);
-        window.google.accounts.id.prompt();
-        setTimeout(() => setLoading(false), 1500);
+      window.google.accounts.id.renderButton(googleSlot, {
+        theme: 'outline',
+        size: 'large',
+        shape: 'rectangular',
+        text: 'continue_with',
+        logo_alignment: 'left',
+        width: googleSlot.offsetWidth || 400
       });
     });
   </script>
