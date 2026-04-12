@@ -462,8 +462,8 @@
         }
 
         if (!response.ok) {
-          const fallback = data?._server_messages
-            ? 'ERPNext rejected this signup. I need to inspect the exact validation message.'
+          const fallback = response.status === 429
+            ? 'Too many signup attempts hit the server at once. Please wait a moment and try again.'
             : 'Something went wrong while sending your signup. Please try again.';
           showError('Signup failed.', fallback);
           return;
