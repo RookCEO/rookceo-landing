@@ -10,7 +10,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --navy: #0b1421;
-      --panel: rgba(13, 24, 38, 0.92);
       --gold: #c9a84c;
       --gold-soft: rgba(201, 168, 76, 0.14);
       --white: #f5f0e8;
@@ -32,6 +31,9 @@
       justify-content: center;
       padding: 2rem;
     }
+    body.is-loading {
+      cursor: progress;
+    }
     .auth-shell {
       width: 100%;
       max-width: 1120px;
@@ -43,6 +45,18 @@
       border-radius: 24px;
       overflow: hidden;
       box-shadow: 0 30px 80px rgba(0,0,0,0.38);
+      position: relative;
+    }
+    .submit-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 14, 24, 0.45);
+      backdrop-filter: blur(2px);
+      display: none;
+      z-index: 20;
+    }
+    .submit-overlay.active {
+      display: block;
     }
     .brand-panel {
       padding: 3rem;
@@ -298,7 +312,8 @@
   </style>
 </head>
 <body>
-  <div class="auth-shell">
+  <div class="auth-shell" id="auth-shell">
+    <div class="submit-overlay" id="submit-overlay"></div>
     <section class="brand-panel">
       <div class="brand-top">
         <div class="logo-row">
@@ -340,7 +355,7 @@
 
         <div id="google-signin-slot"></div>
 
-        <div class="or-divider">or sign up with email</div>
+        <div class="or-divider" id="or-divider">or sign up with email</div>
 
         <form class="waitlist-form" id="waitlist-form">
           <div class="field">
@@ -363,13 +378,32 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     const WAITLIST_ENDPOINT = 'https://erpnext.datanovaconsulting.com/api/method/join_waitlist';
+    const SIGNUP_STATE_KEY = 'rookceo_signup_state_v1';
 
+    const authShell = document.getElementById('auth-shell');
+    const submitOverlay = document.getElementById('submit-overlay');
     const form = document.getElementById('waitlist-form');
+    const orDivider = document.getElementById('or-divider');
     const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
     const submitBtn = document.getElementById('submit-btn');
     const googleSlot = document.getElementById('google-signin-slot');
     const statusBox = document.getElementById('status-box');
+
+    function saveSignupState(payload) {
+      try {
+        localStorage.setItem(SIGNUP_STATE_KEY, JSON.stringify(payload));
+      } catch {}
+    }
+
+    function loadSignupState() {
+      try {
+        const raw = localStorage.getItem(SIGNUP_STATE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
 
     function setStatus(kind, title, message) {
       statusBox.className = 'status-box' + (kind ? ' ' + kind : '');
@@ -383,24 +417,42 @@
       statusBox.innerHTML = '';
     }
 
-    function setLoading(isLoading) {
-      submitBtn.disabled = isLoading;
-      submitBtn.textContent = isLoading ? 'Starting…' : 'Start Up';
-      document.body.style.cursor = isLoading ? 'progress' : 'default';
-      if (isLoading) {
-        setStatus('info', 'Securing your spot...', 'Hang tight while Rook CEO registers your early access request.');
-      }
+    function lockUi(isLocked) {
+      document.body.classList.toggle('is-loading', isLocked);
+      submitBtn.disabled = isLocked;
+      submitBtn.textContent = isLocked ? 'Starting…' : 'Start Up';
+      submitOverlay.classList.toggle('active', isLocked);
+      authShell.setAttribute('aria-busy', isLocked ? 'true' : 'false');
+      Array.from(form.elements).forEach(el => {
+        el.disabled = isLocked;
+      });
+      googleSlot.style.pointerEvents = isLocked ? 'none' : 'auto';
+      googleSlot.style.opacity = isLocked ? '0.6' : '1';
     }
 
-    function showSuccess(title, message) {
+    function showSignedUpState(message) {
       form.style.display = 'none';
       googleSlot.style.display = 'none';
-      document.querySelector('.or-divider').style.display = 'none';
-      setStatus('success', title, message);
+      orDivider.style.display = 'none';
+      setStatus('success', 'You\'re already on the list.', message || 'This browser already completed signup for Rook CEO early access.');
+    }
+
+    function showSuccess(message, email, source) {
+      saveSignupState({
+        signedUp: true,
+        email: email || '',
+        source: source || '',
+        at: Date.now()
+      });
+      form.style.display = 'none';
+      googleSlot.style.display = 'none';
+      orDivider.style.display = 'none';
+      setStatus('success', 'You\'re on the list.', message);
     }
 
     async function submitLead(payload) {
-      setLoading(true);
+      lockUi(true);
+      setStatus('info', 'Securing your spot...', 'Hang tight while Rook CEO registers your early access request.');
       try {
         const response = await fetch(WAITLIST_ENDPOINT, {
           method: 'POST',
@@ -412,12 +464,12 @@
         const status = data?.message?.status;
 
         if (status === 'ok') {
-          showSuccess('You\'re on the list.', 'We have your request and will reach out when your Rook CEO early access spot is ready.');
+          showSuccess('We have your request and will reach out when your Rook CEO early access spot is ready.', payload.email, payload.source);
           return;
         }
 
         if (status === 'exists') {
-          setStatus('info', 'Already registered.', 'That email is already on the Rook CEO waitlist. We\'ll reach out when your spot is ready.');
+          showSuccess('That email is already on the Rook CEO waitlist. We\'ll reach out when your spot is ready.', payload.email, payload.source);
           return;
         }
 
@@ -434,16 +486,22 @@
           return;
         }
 
-        showSuccess('You\'re on the list.', 'We have your request and will reach out when your Rook CEO early access spot is ready.');
+        showSuccess('We have your request and will reach out when your Rook CEO early access spot is ready.', payload.email, payload.source);
       } catch (e) {
         setStatus('error', 'Signup failed.', 'Something went wrong while sending your signup. Please try again.');
       } finally {
-        setLoading(false);
+        lockUi(false);
       }
     }
 
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
+      const existing = loadSignupState();
+      if (existing?.signedUp) {
+        showSignedUpState('This browser already completed signup for Rook CEO early access.');
+        return;
+      }
+
       const email = emailInput.value.trim();
       const name = nameInput.value.trim();
       if (!email) {
@@ -464,6 +522,12 @@
     }
 
     async function handleGoogleCredentialResponse(response) {
+      const existing = loadSignupState();
+      if (existing?.signedUp) {
+        showSignedUpState('This browser already completed signup for Rook CEO early access.');
+        return;
+      }
+
       try {
         const profile = decodeJwt(response.credential);
         await submitLead({
@@ -473,12 +537,19 @@
         });
       } catch (e) {
         setStatus('error', 'Google sign-in failed.', 'Please try Google again or use email instead.');
-        setLoading(false);
+        lockUi(false);
       }
     }
 
     window.addEventListener('load', function() {
       clearStatus();
+
+      const existing = loadSignupState();
+      if (existing?.signedUp) {
+        showSignedUpState('This browser already signed up' + (existing.email ? ' with ' + existing.email : '') + '.');
+        return;
+      }
+
       if (!window.google || !window.google.accounts || !window.google.accounts.id) return;
       window.google.accounts.id.initialize({
         client_id: '1051168217875-t8otf87bns1s6nluql58um6hd3onur8i.apps.googleusercontent.com',
