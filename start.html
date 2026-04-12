@@ -255,7 +255,8 @@
     }
     .form-success,
     .form-error,
-    .form-info {
+    .form-info,
+    .form-pending {
       display: none;
       margin-top: 1rem;
       border-radius: 12px;
@@ -267,6 +268,11 @@
       color: var(--gold);
       border: 1px solid rgba(201,168,76,0.35);
       background: rgba(201,168,76,0.06);
+    }
+    .form-pending {
+      color: #d7e3f1;
+      border: 1px solid rgba(148,163,184,0.32);
+      background: rgba(148,163,184,0.08);
     }
     .form-info {
       color: #b8c9dd;
@@ -354,6 +360,7 @@
           <button type="submit" class="primary-btn" id="submit-btn">Start Up</button>
         </form>
 
+        <div class="form-pending" id="form-pending">Securing your spot...</div>
         <div class="form-success" id="form-success">
           You're on the list. We'll be in touch when your Rook CEO early access spot is ready.
         </div>
@@ -373,11 +380,13 @@
     const emailInput = document.getElementById('email');
     const submitBtn = document.getElementById('submit-btn');
     const googleSlot = document.getElementById('google-signin-slot');
+    const pending = document.getElementById('form-pending');
     const success = document.getElementById('form-success');
     const info = document.getElementById('form-info');
     const error = document.getElementById('form-error');
 
     function resetMessages() {
+      pending.style.display = 'none';
       success.style.display = 'none';
       info.style.display = 'none';
       error.style.display = 'none';
@@ -385,7 +394,12 @@
 
     function setLoading(isLoading) {
       submitBtn.disabled = isLoading;
-      if (isLoading) resetMessages();
+      submitBtn.textContent = isLoading ? 'Starting…' : 'Start Up';
+      document.body.style.cursor = isLoading ? 'progress' : 'default';
+      if (isLoading) {
+        resetMessages();
+        pending.style.display = 'block';
+      }
     }
 
     function showSuccess(message) {
