@@ -3,165 +3,192 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Start Up With Rook CEO</title>
+  <title>Sign up for Rook CEO</title>
   <script async src="https://umami.datanovaconsulting.com/script.js" data-website-id="4b3a6b6a-385c-4146-87b6-1a603f1384e9"></script>
-  <meta name="description" content="Start your Rook CEO early access setup. Join the waitlist with Google or email in a focused signup flow.">
+  <meta name="description" content="Sign up for Rook CEO early access with Google or email.">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --navy: #0f1b2d;
-      --blue: #1a3a5c;
+      --navy: #0b1421;
+      --navy-soft: #111d2d;
+      --panel: rgba(13, 24, 38, 0.92);
       --gold: #c9a84c;
+      --gold-soft: rgba(201, 168, 76, 0.14);
       --white: #f5f0e8;
-      --gray: #8a9bb0;
+      --gray: #94a3b8;
+      --line: rgba(201, 168, 76, 0.18);
       --font: 'Georgia', serif;
       --mono: 'Courier New', monospace;
     }
     body {
+      min-height: 100vh;
       background:
-        radial-gradient(circle at top, rgba(26,58,92,0.65), transparent 38%),
-        linear-gradient(180deg, #0d1625 0%, #0f1b2d 45%, #0b1421 100%);
+        radial-gradient(circle at top, rgba(26,58,92,0.35), transparent 32%),
+        linear-gradient(180deg, #09111c 0%, #0b1421 100%);
       color: var(--white);
       font-family: var(--font);
       line-height: 1.6;
-      min-height: 100vh;
-    }
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.2rem 2rem;
-      border-bottom: 1px solid rgba(201,168,76,0.15);
-    }
-    .logo { font-size: 1.4rem; font-weight: bold; color: var(--gold); letter-spacing: 0.05em; text-decoration: none; }
-    .nav-link {
-      color: var(--gray);
-      text-decoration: none;
-      font-family: var(--mono);
-      font-size: 0.85rem;
-    }
-    main {
-      min-height: calc(100vh - 92px);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 3rem 1.5rem 4rem;
+      padding: 2rem;
     }
-    .signup-shell {
+    .auth-shell {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1120px;
+      min-height: 720px;
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 2rem;
-      align-items: stretch;
+      grid-template-columns: 1.05fr 0.95fr;
+      background: rgba(8, 14, 24, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.38);
     }
-    .context-panel,
-    .signup-panel {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(201,168,76,0.16);
-      border-radius: 16px;
-      backdrop-filter: blur(10px);
-    }
-    .context-panel {
+    .brand-panel {
+      position: relative;
       padding: 3rem;
+      background:
+        linear-gradient(180deg, rgba(17,29,45,0.95) 0%, rgba(11,20,33,0.98) 100%);
+      border-right: 1px solid var(--line);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+    }
+    .brand-top {
+      max-width: 32rem;
+    }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 2rem;
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-size: 0.82rem;
+    }
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid rgba(201,168,76,0.35);
+      display: grid;
+      place-items: center;
+      background: var(--gold-soft);
+      overflow: hidden;
+    }
+    .logo-mark img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
     }
     .eyebrow {
       display: inline-block;
       font-family: var(--mono);
-      font-size: 0.75rem;
-      color: var(--gold);
-      border: 1px solid rgba(201,168,76,0.4);
-      padding: 0.25rem 0.75rem;
-      border-radius: 999px;
-      margin-bottom: 1.5rem;
+      font-size: 0.72rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.28);
+      border-radius: 999px;
+      padding: 0.28rem 0.7rem;
+      margin-bottom: 1.5rem;
     }
     h1 {
-      font-size: clamp(2.2rem, 5vw, 3.6rem);
-      line-height: 1.1;
-      margin-bottom: 1rem;
+      font-size: clamp(2.5rem, 4.6vw, 4.3rem);
+      line-height: 1.03;
+      margin-bottom: 1.1rem;
+      letter-spacing: -0.03em;
     }
     h1 span { color: var(--gold); }
     .lede {
       color: var(--gray);
-      font-size: 1.05rem;
-      max-width: 34rem;
+      font-size: 1.02rem;
+      max-width: 28rem;
       margin-bottom: 2rem;
     }
-    .mini-list {
+    .proof-list {
       list-style: none;
       display: grid;
-      gap: 0.9rem;
+      gap: 1rem;
+      max-width: 30rem;
     }
-    .mini-list li {
-      padding-left: 1.5rem;
-      position: relative;
+    .proof-list li {
+      padding: 1rem 1rem 1rem 1.1rem;
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+    .proof-list strong {
+      display: block;
       color: var(--white);
+      margin-bottom: 0.22rem;
       font-size: 0.95rem;
     }
-    .mini-list li::before {
-      content: "✦";
-      position: absolute;
-      left: 0;
-      color: var(--gold);
-    }
-    .panel-note {
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(201,168,76,0.12);
+    .proof-list span {
       color: var(--gray);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
     }
-    .signup-panel {
-      padding: 2rem;
+    .brand-bottom {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 2rem;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--gray);
+    }
+    .brand-bottom a {
+      color: var(--gray);
+      text-decoration: none;
+    }
+    .form-panel {
+      padding: 3rem;
+      display: flex;
+      align-items: center;
       justify-content: center;
+      background:
+        radial-gradient(circle at top right, rgba(201,168,76,0.08), transparent 30%),
+        linear-gradient(180deg, rgba(9,17,28,0.95) 0%, rgba(11,20,33,0.98) 100%);
     }
-    .signup-card {
-      max-width: 420px;
-      margin: 0 auto;
+    .form-card {
       width: 100%;
+      max-width: 420px;
     }
-    .signup-card h2 {
-      font-size: 1.8rem;
-      margin-bottom: 0.6rem;
-      color: var(--white);
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 1.5rem;
+      color: var(--gray);
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 0.82rem;
     }
-    .signup-card p {
+    .form-card h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .form-card p {
       color: var(--gray);
       margin-bottom: 1.5rem;
       font-size: 0.95rem;
     }
-    .google-btn {
+    #google-signin-slot {
       width: 100%;
-      padding: 0.9rem 1rem;
-      background: #ffffff;
-      color: #1f1f1f;
-      border: none;
-      border-radius: 10px;
-      font-family: Arial, sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
+      min-height: 44px;
       margin-bottom: 1rem;
     }
-    .google-btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .or-divider {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       color: var(--gray);
       font-family: var(--mono);
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       margin: 1rem 0;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -177,47 +204,64 @@
       flex-direction: column;
       gap: 0.85rem;
     }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .field label {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
     .waitlist-form input {
       width: 100%;
-      padding: 0.95rem 1rem;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(201,168,76,0.28);
-      border-radius: 10px;
+      padding: 0.98rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 12px;
       color: var(--white);
       font-family: var(--mono);
       font-size: 0.95rem;
       outline: none;
     }
-    .waitlist-form input::placeholder { color: var(--gray); }
+    .waitlist-form input::placeholder { color: #6f8197; }
+    .waitlist-form input:focus {
+      border-color: rgba(201,168,76,0.5);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+    }
     .primary-btn {
       width: 100%;
-      padding: 0.95rem 1rem;
+      padding: 1rem 1rem;
       background: var(--gold);
       color: var(--navy);
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       font-family: var(--mono);
       font-size: 0.95rem;
       font-weight: bold;
       cursor: pointer;
+      margin-top: 0.35rem;
     }
     .primary-btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .fine-print {
       margin-top: 1rem;
       color: var(--gray);
       font-family: var(--mono);
-      font-size: 0.74rem;
-      text-align: center;
+      font-size: 0.72rem;
+      line-height: 1.5;
     }
     .form-success,
     .form-error,
     .form-info {
       display: none;
       margin-top: 1rem;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 0.95rem 1rem;
       font-family: var(--mono);
-      font-size: 0.85rem;
+      font-size: 0.83rem;
     }
     .form-success {
       color: var(--gold);
@@ -234,65 +278,91 @@
       border: 1px solid rgba(224,112,112,0.3);
       background: rgba(224,112,112,0.08);
     }
-    @media (max-width: 900px) {
-      .signup-shell { grid-template-columns: 1fr; }
-      .context-panel, .signup-panel { padding: 1.5rem; }
-      main { padding-top: 2rem; }
+    @media (max-width: 920px) {
+      body { padding: 1rem; }
+      .auth-shell {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      .brand-panel {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand-panel,
+      .form-panel { padding: 1.6rem; }
+      .brand-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
 <body>
-  <nav>
-    <a class="logo" href="/">ROOK</a>
-    <a class="nav-link" href="/">← Back to main site</a>
-  </nav>
-
-  <main>
-    <div class="signup-shell">
-      <section class="context-panel">
-        <div>
-          <div class="eyebrow">Start Up Early Access</div>
-          <h1>Get your <span>private Rook CEO</span> started.</h1>
-          <p class="lede">
-            This is the focused signup step. Join the early access list in under a minute,
-            and we’ll reach out when your Rook CEO spot is ready.
-          </p>
-          <ul class="mini-list">
-            <li>Your own private AI business operator</li>
-            <li>Business audits, research, drafting, and daily briefings</li>
-            <li>Launch pricing at $25/month for early access</li>
-          </ul>
+  <div class="auth-shell">
+    <section class="brand-panel">
+      <div class="brand-top">
+        <div class="logo-row">
+          <div class="logo-mark"><img src="/rook.png" alt="Rook"></div>
+          <span>Rook CEO</span>
         </div>
-        <p class="panel-note">
-          We’re keeping this simple on purpose. One clear next step, no clutter, and a cleaner path from interest to signup.
+        <div class="eyebrow">Early Access</div>
+        <h1>Your <span>AI business operator</span> starts here.</h1>
+        <p class="lede">
+          Sign up for early access to Rook CEO and get a private operator built to audit,
+          monitor, draft, research, and keep your business moving.
         </p>
-      </section>
+        <ul class="proof-list">
+          <li>
+            <strong>Private Rook instance</strong>
+            <span>Dedicated context, memory, and ongoing operation for your business.</span>
+          </li>
+          <li>
+            <strong>Useful from day one</strong>
+            <span>Audits, research, drafting, and daily briefings instead of vague AI fluff.</span>
+          </li>
+          <li>
+            <strong>Launch pricing</strong>
+            <span>Early access starts at $25/month while we open the first cohort.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="brand-bottom">
+        <span>rookceo.com</span>
+        <a href="/">Back to main site</a>
+      </div>
+    </section>
 
-      <section class="signup-panel">
-        <div class="signup-card">
-          <h2>Join the waitlist</h2>
-          <p>Use Google for the fastest path, or enter your name and email manually.</p>
+    <section class="form-panel">
+      <div class="form-card">
+        <a class="back-link" href="/">← Back</a>
+        <h2>Create your spot</h2>
+        <p>Continue with Google or use your email manually.</p>
 
-          <div id="google-signin-slot"></div>
+        <div id="google-signin-slot"></div>
 
-          <div class="or-divider">or join with email</div>
+        <div class="or-divider">or sign up with email</div>
 
-          <form class="waitlist-form" id="waitlist-form">
+        <form class="waitlist-form" id="waitlist-form">
+          <div class="field">
+            <label for="name">Name</label>
             <input type="text" id="name" placeholder="name">
-            <input type="email" id="email" placeholder="your@email.com" required>
-            <button type="submit" class="primary-btn" id="submit-btn">Start Up</button>
-          </form>
-
-          <div class="form-success" id="form-success">
-            You're on the list. We'll be in touch when your Rook CEO early access spot is ready.
           </div>
-          <div class="form-info" id="form-info"></div>
-          <div class="form-error" id="form-error"></div>
-          <p class="fine-print">Launch price: $25/month. No spam, just the next step when spots open.</p>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="your@email.com" required>
+          </div>
+          <button type="submit" class="primary-btn" id="submit-btn">Start Up</button>
+        </form>
+
+        <div class="form-success" id="form-success">
+          You're on the list. We'll be in touch when your Rook CEO early access spot is ready.
         </div>
-      </section>
-    </div>
-  </main>
+        <div class="form-info" id="form-info"></div>
+        <div class="form-error" id="form-error"></div>
+        <p class="fine-print">By signing up, you’re joining the early access waitlist for Rook CEO.</p>
+      </div>
+    </section>
+  </div>
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
@@ -364,7 +434,8 @@
         }
 
         if (!response.ok) {
-          showError('Something went wrong. Please try again.');
+          const fallback = data?._server_messages ? 'Signup was rejected by ERPNext. I need to inspect the exact lead validation message.' : 'Something went wrong. Please try again.';
+          showError(fallback);
           return;
         }
 
@@ -387,7 +458,7 @@
       await submitLead({
         email,
         name,
-        source: 'Website'
+        source: 'rookceo-start-email'
       });
     });
 
@@ -403,7 +474,7 @@
         await submitLead({
           email: profile.email,
           name: profile.name || '',
-          source: 'Website'
+          source: 'rookceo-start-google'
         });
       } catch (e) {
         showError('Google sign-in failed. Please use email instead.');
