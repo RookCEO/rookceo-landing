@@ -42,13 +42,9 @@
     .card {
       width: 100%;
       max-width: 460px;
-      background: var(--panel);
-      border-radius: 24px;
       padding: 2rem;
-      backdrop-filter: blur(18px);
       position: relative;
       z-index: 2;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.28);
     }
     .submit-overlay {
       position: absolute;
@@ -219,16 +215,16 @@
 
       <div class="eyebrow">Rook CEO</div>
       <h1>Rook CEO</h1>
-      <p class="subhead">Join the waitlist with Google or email.</p>
+      <p class="subhead">Join the waitlist.</p>
 
       <div id="google-signin-slot"></div>
 
-      <div class="or-divider" id="or-divider">or sign up with email instead</div>
+      <div class="or-divider" id="or-divider">or</div>
 
       <form class="waitlist-form" id="waitlist-form">
         <input type="text" id="name" placeholder="name">
         <input type="email" id="email" placeholder="your@email.com" required>
-        <button type="submit" class="primary-btn" id="submit-btn">Start Up</button>
+        <button type="submit" class="primary-btn" id="submit-btn">Sign up with email</button>
       </form>
 
       <div class="status-box" id="status-box"></div>
@@ -282,7 +278,7 @@
     function lockUi(isLocked) {
       document.body.classList.toggle('is-loading', isLocked);
       submitBtn.disabled = isLocked;
-      submitBtn.textContent = isLocked ? 'Starting…' : 'Start Up';
+      submitBtn.textContent = isLocked ? 'Starting…' : 'Sign up with email';
       submitOverlay.classList.toggle('active', isLocked);
       page.setAttribute('aria-busy', isLocked ? 'true' : 'false');
       Array.from(form.elements).forEach(el => { el.disabled = isLocked; });
