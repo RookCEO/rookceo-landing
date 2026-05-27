@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign up for Rook CEO</title>
   <script async src="https://umami.datanovaconsulting.com/script.js" data-website-id="4b3a6b6a-385c-4146-87b6-1a603f1384e9"></script>
-  <meta name="description" content="Sign up for Rook CEO early access with Google or email.">
+  <meta name="description" content="Join Rook CEO early access: a private AI operator for small-business workflows.">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -192,7 +192,7 @@
       <div class="submit-overlay" id="submit-overlay"></div>
 
       <div class="eyebrow"><span class="rook">Rook</span> CEO</div>
-      <p class="subhead">Join the waitlist.</p>
+      <p class="subhead">A private Rook agent for small-business operators. Give it a goal, and it starts moving the work forward across research, follow-ups, recurring jobs, and workflow fixes.</p>
 
       <div id="google-signin-slot"></div>
 
@@ -201,7 +201,7 @@
       <form class="waitlist-form" id="waitlist-form">
         <input type="text" id="name" placeholder="name">
         <input type="email" id="email" placeholder="your@email.com" required>
-        <button type="submit" class="primary-btn" id="submit-btn">Sign up with email</button>
+        <button type="submit" class="primary-btn" id="submit-btn">Join early access</button>
       </form>
 
       <div class="status-box" id="status-box"></div>
@@ -255,7 +255,7 @@
     function lockUi(isLocked) {
       document.body.classList.toggle('is-loading', isLocked);
       submitBtn.disabled = isLocked;
-      submitBtn.textContent = isLocked ? 'Starting…' : 'Sign up with email';
+      submitBtn.textContent = isLocked ? 'Starting…' : 'Join early access';
       submitOverlay.classList.toggle('active', isLocked);
       page.setAttribute('aria-busy', isLocked ? 'true' : 'false');
       Array.from(form.elements).forEach(el => { el.disabled = isLocked; });
