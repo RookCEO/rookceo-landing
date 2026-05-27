@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign up for Rook CEO</title>
   <script async src="https://umami.datanovaconsulting.com/script.js" data-website-id="4b3a6b6a-385c-4146-87b6-1a603f1384e9"></script>
-  <meta name="description" content="Join Rook CEO early access: a private AI operator for small-business workflows.">
+  <meta name="description" content="Join Rook CEO early access. Give your private agent a goal, then watch the work move across a Kanban board over secure Tailscale access.">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -41,7 +41,7 @@
     }
     .card {
       width: 100%;
-      max-width: 460px;
+      max-width: 540px;
       padding: 2rem;
       position: relative;
       z-index: 2;
@@ -78,6 +78,29 @@
       font-size: 0.98rem;
       text-align: center;
       margin-bottom: 1.5rem;
+    }
+    .proof-list {
+      list-style: none;
+      display: grid;
+      gap: 0.7rem;
+      margin: 0 0 1.4rem;
+      padding: 1rem;
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.035);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: #cbd7e6;
+    }
+    .proof-list li {
+      display: flex;
+      gap: 0.55rem;
+      align-items: flex-start;
+    }
+    .proof-list li::before {
+      content: "→";
+      color: var(--gold);
+      flex-shrink: 0;
     }
     #google-signin-slot {
       width: 100%;
@@ -192,7 +215,13 @@
       <div class="submit-overlay" id="submit-overlay"></div>
 
       <div class="eyebrow"><span class="rook">Rook</span> CEO</div>
-      <p class="subhead">A private Rook agent for small-business operators. Give it a goal, and it starts moving the work forward across research, follow-ups, recurring jobs, and workflow fixes.</p>
+      <p class="subhead">Give Rook CEO a goal. Watch it plan the work, move tasks across a Kanban board, call the right agents, and build new skills when your workflow needs them.</p>
+
+      <ul class="proof-list" aria-label="What early access includes">
+        <li>Track progress from idea to done on a live Kanban board.</li>
+        <li>See which agents are working, what they used, and what changed.</li>
+        <li>Keep access private over Tailscale instead of exposing your operator to the open web.</li>
+      </ul>
 
       <div id="google-signin-slot"></div>
 
