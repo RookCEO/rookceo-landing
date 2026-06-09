@@ -311,17 +311,26 @@
       setStatus('success', 'You\'re on the list.', message || 'Your spot is being secured now. We\'ll reach out when your Rook CEO early access spot is ready.');
     }
 
+    function encodeWaitlistPayload(payload) {
+      const body = new URLSearchParams();
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) body.set(key, value);
+      });
+      return body;
+    }
+
     async function postWaitlistLead(endpoint, payload) {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), WAITLIST_DELIVERY_TIMEOUT_MS);
       try {
-        const response = await fetch(endpoint, {
+        await fetch(endpoint, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          signal: controller.signal
+          mode: 'no-cors',
+          body: encodeWaitlistPayload(payload),
+          signal: controller.signal,
+          keepalive: true
         });
-        return await response.json().catch(() => ({}));
+        return { message: { status: 'sent' } };
       } finally {
         clearTimeout(timeout);
       }
@@ -332,8 +341,8 @@
         try {
           const data = await postWaitlistLead(endpoint, payload);
           const status = data?.message?.status;
-          if (status === 'ok' || status === 'exists') {
-            saveSignupState({ signedUp: true, email: payload.email || '', source: payload.source || '', at: Date.now(), optimistic: false, confirmed: true });
+          if (status === 'ok' || status === 'exists' || status === 'sent') {
+            saveSignupState({ signedUp: true, email: payload.email || '', source: payload.source || '', at: Date.now(), optimistic: true, deliveryAttempted: true });
             return;
           }
         } catch (e) {
