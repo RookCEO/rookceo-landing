@@ -243,8 +243,12 @@
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
-    const WAITLIST_ENDPOINT = 'https://erpnext.datanovaconsulting.com/api/method/join_waitlist';
+    const WAITLIST_ENDPOINTS = [
+      'https://erpnext.datanovaconsulting.com/api/method/join_waitlist',
+      'https://erp.tail417eff.ts.net/api/method/join_waitlist'
+    ];
     const SIGNUP_STATE_KEY = 'rookceo_signup_state_v1';
+    const WAITLIST_DELIVERY_TIMEOUT_MS = 8000;
 
     const page = document.getElementById('page');
     const submitOverlay = document.getElementById('submit-overlay');
@@ -307,20 +311,34 @@
       setStatus('success', 'You\'re on the list.', message || 'Your spot is being secured now. We\'ll reach out when your Rook CEO early access spot is ready.');
     }
 
-    async function sendLeadInBackground(payload) {
+    async function postWaitlistLead(endpoint, payload) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), WAITLIST_DELIVERY_TIMEOUT_MS);
       try {
-        const response = await fetch(WAITLIST_ENDPOINT, {
+        const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(payload),
+          signal: controller.signal
         });
-        const data = await response.json().catch(() => ({}));
-        const status = data?.message?.status;
-        if (status === 'ok' || status === 'exists') {
-          saveSignupState({ signedUp: true, email: payload.email || '', source: payload.source || '', at: Date.now(), optimistic: false, confirmed: true });
+        return await response.json().catch(() => ({}));
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
+    async function sendLeadInBackground(payload) {
+      for (const endpoint of WAITLIST_ENDPOINTS) {
+        try {
+          const data = await postWaitlistLead(endpoint, payload);
+          const status = data?.message?.status;
+          if (status === 'ok' || status === 'exists') {
+            saveSignupState({ signedUp: true, email: payload.email || '', source: payload.source || '', at: Date.now(), optimistic: false, confirmed: true });
+            return;
+          }
+        } catch (e) {
+          console.warn('Background signup delivery failed', endpoint, e);
         }
-      } catch (e) {
-        console.warn('Background signup delivery failed', e);
       }
     }
 
