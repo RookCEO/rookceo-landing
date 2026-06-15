@@ -244,8 +244,9 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     const WAITLIST_ENDPOINTS = [
-      'https://erpnext.datanovaconsulting.com/api/method/join_waitlist',
-      'https://erp.tail417eff.ts.net/api/method/join_waitlist'
+      // Public waitlist signups must use the public ERPNext route.
+      // Do not embed tailnet-only hosts in public HTML.
+      'https://erpnext.datanovaconsulting.com/api/method/join_waitlist'
     ];
     const SIGNUP_STATE_KEY = 'rookceo_signup_state_v1';
     const WAITLIST_DELIVERY_TIMEOUT_MS = 8000;
