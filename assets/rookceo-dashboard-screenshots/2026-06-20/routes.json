@@ -1,0 +1,16 @@
+{
+  "00-dashboard-overview-hires.png": "/",
+  "01-chat-tui-hires.png": "/chat",
+  "02-sessions-hires.png": "/sessions",
+  "03-models-hires.png": "/models",
+  "04-cron-hires-longwait.png": "/cron",
+  "05-skills-hires.png": "/skills",
+  "06-plugins-hires.png": "/plugins",
+  "07-profiles-hires-longwait.png": "/profiles",
+  "08-config-hires.png": "/config",
+  "09-keys-env-hires.png": "/env",
+  "10-kanban-left-lanes-hires.png": "/kanban",
+  "12-discover-hires.png": "/discover",
+  "13-tool-slimmer-hires.png": "/tool-slimmer",
+  "14-claw3d-office-hires-45s.png": "/claw3d"
+}
