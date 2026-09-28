@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign up for Rook CEO</title>
+  <script async src="https://umami.datanovaconsulting.com/script.js" data-website-id="4b3a6b6a-385c-4146-87b6-1a603f1384e9"></script>
+  <meta name="description" content="Join Rook CEO early access. Give your private agent a goal, then watch the work move across a Kanban board over secure Tailscale access.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-top: #16253b;
+      --bg-mid: #0f1b2d;
+      --bg-bottom: #0a131f;
+      --panel: rgba(8, 14, 24, 0.76);
+      --gold: #c9a84c;
+      --white: #f5f0e8;
+      --gray: #98a7bb;
+      --font: 'Georgia', serif;
+      --mono: 'Courier New', monospace;
+    }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at center top, var(--bg-top) 0%, var(--bg-mid) 34%, var(--bg-bottom) 74%, #070d16 100%);
+      color: var(--white);
+      font-family: var(--font);
+      line-height: 1.6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    body.is-loading { cursor: progress; }
+    .page {
+      width: 100%;
+      min-height: calc(100vh - 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .card {
+      width: 100%;
+      max-width: 540px;
+      padding: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+    .submit-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: rgba(8, 14, 24, 0.42);
+      backdrop-filter: blur(2px);
+      display: none;
+      z-index: 20;
+    }
+    .submit-overlay.active { display: block; }
+    .eyebrow {
+      display: block;
+      width: fit-content;
+      margin: 0 auto 1.35rem;
+      padding: 1rem 2.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(201,168,76,0.32);
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 2.6rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .eyebrow .rook {
+      color: #ffffff;
+    }
+    .subhead {
+      color: var(--gray);
+      font-size: 0.98rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .proof-list {
+      list-style: none;
+      display: grid;
+      gap: 0.7rem;
+      margin: 0 0 1.4rem;
+      padding: 1rem;
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.035);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: #cbd7e6;
+    }
+    .proof-list li {
+      display: flex;
+      gap: 0.55rem;
+      align-items: flex-start;
+    }
+    .proof-list li::before {
+      content: "→";
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    #google-signin-slot {
+      width: 100%;
+      min-height: 44px;
+      margin-bottom: 1rem;
+    }
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--gray);
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      margin: 1rem 0;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .or-divider::before,
+    .or-divider::after {
+      content: "";
+      flex: 1;
+      border-top: 1px solid rgba(201,168,76,0.15);
+    }
+    .waitlist-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .waitlist-form input {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 14px;
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .waitlist-form input::placeholder { color: #73839b; }
+    .waitlist-form input:focus {
+      border-color: rgba(201,168,76,0.45);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+    }
+    .primary-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--gold);
+      color: #0b1421;
+      border: none;
+      border-radius: 14px;
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .primary-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .status-box {
+      display: none;
+      margin-top: 1rem;
+      border-radius: 14px;
+      padding: 1rem 1.05rem;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+      border: 1px solid rgba(148,163,184,0.25);
+      background: rgba(148,163,184,0.08);
+      color: #d7e3f1;
+    }
+    .status-box.success {
+      color: var(--gold);
+      border-color: rgba(201,168,76,0.35);
+      background: rgba(201,168,76,0.06);
+    }
+    .status-box.info {
+      color: #b8c9dd;
+      border-color: rgba(138,155,176,0.3);
+      background: rgba(138,155,176,0.08);
+    }
+    .status-box.error {
+      color: #f0a1a1;
+      border-color: rgba(224,112,112,0.3);
+      background: rgba(224,112,112,0.08);
+    }
+    .state-card-title {
+      display: block;
+      font-size: 0.88rem;
+      margin-bottom: 0.28rem;
+      letter-spacing: 0.02em;
+    }
+    .state-card-body {
+      display: block;
+      line-height: 1.55;
+    }
+    .legal {
+      margin-top: 1.2rem;
+      display: flex;
+      justify-content: center;
+      color: var(--gray);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-align: center;
+    }
+    .legal a {
+      color: #6fb6ff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="page">
+    <div class="card" id="card">
+      <div class="submit-overlay" id="submit-overlay"></div>
+
+      <div class="eyebrow"><span class="rook">Rook</span> CEO</div>
+      <p class="subhead">Give Rook CEO a goal. Watch it plan the work, move tasks across a Kanban board, call the right agents, and build new skills when your workflow needs them.</p>
+
+      <ul class="proof-list" aria-label="What early access includes">
+        <li>Track progress from idea to done on a live Kanban board.</li>
+        <li>See which agents are working, what they used, and what changed.</li>
+        <li>Keep access private over Tailscale instead of exposing your operator to the open web.</li>
+      </ul>
+
+      <div id="google-signin-slot"></div>
+
+      <div class="or-divider" id="or-divider">or</div>
+
+      <form class="waitlist-form" id="waitlist-form">
+        <input type="text" id="name" placeholder="name">
+        <input type="email" id="email" placeholder="your@email.com" required>
+        <button type="submit" class="primary-btn" id="submit-btn">Join early access</button>
+      </form>
+
+      <div class="status-box" id="status-box"></div>
+
+      <div class="legal">
+        <span>By signing up, you agree to our <a href="/terms.html">Terms of Service</a> and <a href="/privacy.html">Privacy Policy</a></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    const WAITLIST_ENDPOINTS = [
+      // Public waitlist signups must use the public ERPNext route.
+      // Do not embed tailnet-only hosts in public HTML.
+      'https://erpnext.datanovaconsulting.com/api/method/join_waitlist'
+    ];
+    const SIGNUP_STATE_KEY = 'rookceo_signup_state_v1';
+    const WAITLIST_DELIVERY_TIMEOUT_MS = 8000;
+
+    const page = document.getElementById('page');
+    const submitOverlay = document.getElementById('submit-overlay');
+    const form = document.getElementById('waitlist-form');
+    const orDivider = document.getElementById('or-divider');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const submitBtn = document.getElementById('submit-btn');
+    const googleSlot = document.getElementById('google-signin-slot');
+    const statusBox = document.getElementById('status-box');
+
+    function saveSignupState(payload) {
+      try { localStorage.setItem(SIGNUP_STATE_KEY, JSON.stringify(payload)); } catch {}
+    }
+
+    function loadSignupState() {
+      try {
+        const raw = localStorage.getItem(SIGNUP_STATE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function setStatus(kind, title, message) {
+      statusBox.className = 'status-box' + (kind ? ' ' + kind : '');
+      statusBox.innerHTML = '<span class="state-card-title">' + title + '</span><span class="state-card-body">' + message + '</span>';
+      statusBox.style.display = 'block';
+    }
+
+    function clearStatus() {
+      statusBox.style.display = 'none';
+      statusBox.className = 'status-box';
+      statusBox.innerHTML = '';
+    }
+
+    function lockUi(isLocked) {
+      document.body.classList.toggle('is-loading', isLocked);
+      submitBtn.disabled = isLocked;
+      submitBtn.textContent = isLocked ? 'Starting…' : 'Join early access';
+      submitOverlay.classList.toggle('active', isLocked);
+      page.setAttribute('aria-busy', isLocked ? 'true' : 'false');
+      Array.from(form.elements).forEach(el => { el.disabled = isLocked; });
+      googleSlot.style.pointerEvents = isLocked ? 'none' : 'auto';
+      googleSlot.style.opacity = isLocked ? '0.6' : '1';
+    }
+
+    function showSignedUpState(message) {
+      form.style.display = 'none';
+      googleSlot.style.display = 'none';
+      orDivider.style.display = 'none';
+      setStatus('success', 'You\'re already on the list.', message || 'This browser already completed signup for Rook CEO early access.');
+    }
+
+    function showOptimisticSuccess(message, email, source) {
+      saveSignupState({ signedUp: true, email: email || '', source: source || '', at: Date.now(), optimistic: true });
+      form.style.display = 'none';
+      googleSlot.style.display = 'none';
+      orDivider.style.display = 'none';
+      setStatus('success', 'You\'re on the list.', message || 'Your spot is being secured now. We\'ll reach out when your Rook CEO early access spot is ready.');
+    }
+
+    function encodeWaitlistPayload(payload) {
+      const body = new URLSearchParams();
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) body.set(key, value);
+      });
+      return body;
+    }
+
+    async function postWaitlistLead(endpoint, payload) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), WAITLIST_DELIVERY_TIMEOUT_MS);
+      try {
+        await fetch(endpoint, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: encodeWaitlistPayload(payload),
+          signal: controller.signal,
+          keepalive: true
+        });
+        return { message: { status: 'sent' } };
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
+    async function sendLeadInBackground(payload) {
+      for (const endpoint of WAITLIST_ENDPOINTS) {
+        try {
+          const data = await postWaitlistLead(endpoint, payload);
+          const status = data?.message?.status;
+          if (status === 'ok' || status === 'exists' || status === 'sent') {
+            saveSignupState({ signedUp: true, email: payload.email || '', source: payload.source || '', at: Date.now(), optimistic: true, deliveryAttempted: true });
+            return;
+          }
+        } catch (e) {
+          console.warn('Background signup delivery failed', endpoint, e);
+        }
+      }
+    }
+
+    function optimisticSubmit(payload) {
+      lockUi(true);
+      showOptimisticSuccess('Your spot is being secured now. We\'ll reach out when your Rook CEO early access spot is ready.', payload.email, payload.source);
+      lockUi(false);
+      sendLeadInBackground(payload);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const existing = loadSignupState();
+      if (existing?.signedUp) {
+        showSignedUpState('This browser already completed signup for Rook CEO early access.');
+        return;
+      }
+      const email = emailInput.value.trim();
+      const name = nameInput.value.trim();
+      if (!email) {
+        setStatus('error', 'Email needed.', 'Please enter a valid email address to join the waitlist.');
+        return;
+      }
+      optimisticSubmit({ email, name, source: 'rookceo-start-email' });
+    });
+
+    function decodeJwt(token) {
+      const payload = token.split('.')[1];
+      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(atob(base64));
+    }
+
+    async function handleGoogleCredentialResponse(response) {
+      const existing = loadSignupState();
+      if (existing?.signedUp) {
+        showSignedUpState('This browser already completed signup for Rook CEO early access.');
+        return;
+      }
+      try {
+        const profile = decodeJwt(response.credential);
+        optimisticSubmit({ email: profile.email, name: profile.name || '', source: 'rookceo-start-google' });
+      } catch (e) {
+        setStatus('error', 'Google sign-in failed.', 'Please try Google again or use email instead.');
+        lockUi(false);
+      }
+    }
+
+    window.addEventListener('load', function() {
+      clearStatus();
+      const existing = loadSignupState();
+      if (existing?.signedUp) {
+        showSignedUpState('This browser already signed up' + (existing.email ? ' with ' + existing.email : '') + '.');
+        return;
+      }
+      if (!window.google || !window.google.accounts || !window.google.accounts.id) return;
+      window.google.accounts.id.initialize({
+        client_id: '1051168217875-t8otf87bns1s6nluql58um6hd3onur8i.apps.googleusercontent.com',
+        callback: handleGoogleCredentialResponse,
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+      window.google.accounts.id.renderButton(googleSlot, {
+        theme: 'outline',
+        size: 'large',
+        shape: 'rectangular',
+        text: 'continue_with',
+        logo_alignment: 'left',
+        width: googleSlot.offsetWidth || 400
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rook CEO - Give Your AI Operator a Goal</title>
+  <script async src="https://umami.datanovaconsulting.com/script.js" data-website-id="4b3a6b6a-385c-4146-87b6-1a603f1384e9"></script>
+  <meta name="description" content="Give Rook CEO a goal, watch it progress across a Kanban board, and see your private agents build skills and execute securely over Tailscale.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0f1b2d;
+      --blue: #1a3a5c;
+      --gold: #c9a84c;
+      --white: #f5f0e8;
+      --gray: #8a9bb0;
+      --font: 'Georgia', serif;
+      --mono: 'Courier New', monospace;
+    }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: var(--font);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 2rem;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .logo { font-size: 1.4rem; font-weight: bold; color: var(--gold); letter-spacing: 0.05em; }
+    .nav-cta {
+      background: var(--gold);
+      color: var(--navy);
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 5rem 1.5rem 3rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 0.25rem 0.75rem;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.12em;
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+      color: var(--white);
+    }
+    h1 span { color: var(--gold); }
+    .subhead {
+      font-size: 1.15rem;
+      color: var(--gray);
+      max-width: 540px;
+      margin: 0 auto 2rem;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .hero-btn {
+      display: inline-block;
+      padding: 0.9rem 1.4rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    .hero-btn.primary {
+      background: var(--gold);
+      color: var(--navy);
+    }
+    .hero-btn.secondary {
+      border: 1px solid rgba(201,168,76,0.35);
+      color: var(--white);
+      background: rgba(255,255,255,0.03);
+    }
+    .hero-btn.primary:hover { background: #d4b060; }
+    .hero-btn.secondary:hover { background: rgba(255,255,255,0.06); }
+    .form-note { font-family: var(--mono); font-size: 0.75rem; color: var(--gray); }
+
+    .divider { border: none; border-top: 1px solid rgba(201,168,76,0.15); margin: 3.5rem auto; max-width: 900px; }
+
+    .features {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .features h2 { text-align: center; font-size: 1.6rem; margin-bottom: 2.5rem; color: var(--gold); }
+    .how-it-works {
+      max-width: 760px;
+      margin: 0 auto 2.5rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.035);
+    }
+    .how-it-works p { color: var(--gray); margin-bottom: 1rem; }
+    .how-it-works ol {
+      padding-left: 1.2rem;
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 0.86rem;
+    }
+    .how-it-works li { margin: 0.55rem 0; }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 6px;
+      padding: 1.5rem;
+    }
+    .feature-card .icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .feature-card h3 { font-size: 1rem; color: var(--white); margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.875rem; color: var(--gray); }
+
+    .pricing {
+      max-width: 480px;
+      margin: 3.5rem auto;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+    .pricing h2 { font-size: 1.6rem; margin-bottom: 2rem; color: var(--gold); }
+    .price-card {
+      background: rgba(201,168,76,0.06);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 2.5rem 2rem;
+    }
+    .price-tag { font-size: 3rem; font-weight: bold; color: var(--gold); }
+    .price-tag span { font-size: 1rem; color: var(--gray); }
+    .price-label { font-family: var(--mono); font-size: 0.8rem; color: var(--gray); margin-bottom: 1.5rem; }
+    .feature-list { list-style: none; text-align: left; margin-bottom: 2rem; }
+    .feature-list li {
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      color: var(--white);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .feature-list li::before { content: "✓"; color: var(--gold); flex-shrink: 0; }
+    .price-cta {
+      display: block;
+      background: var(--gold);
+      color: var(--navy);
+      padding: 0.9rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+    .price-cta:hover { background: #d4b060; }
+
+    footer {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--gray);
+      border-top: 1px solid rgba(201,168,76,0.1);
+      margin-top: 4rem;
+    }
+    footer a { color: var(--gray); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">ROOK</div>
+    <a class="nav-cta" href="/start.html">Start Up</a>
+  </nav>
+
+  <section class="hero" id="waitlist">
+    <div class="badge">START UP EARLY ACCESS</div>
+    <img src="rook.png" alt="Rook the Capybara CEO" style="display:block;width:160px;height:160px;object-fit:contain;border-radius:50%;border:2px solid rgba(201,168,76,0.4);margin:0 auto 1.5rem;">
+    <h1>Give Rook CEO a goal. <span>Watch the work move.</span></h1>
+    <p class="subhead">
+      Rook CEO turns a goal into visible work: Kanban cards, agent runs, new skills, follow-ups, and secure private access over Tailscale.
+    </p>
+    <div class="hero-actions">
+      <a class="hero-btn primary" href="/start.html">Start Up</a>
+      <a class="hero-btn secondary" href="#pricing">See launch pricing</a>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="features">
+    <h2>What Rook does</h2>
+    <div class="how-it-works">
+      <p>You do not hand Rook CEO a vague prompt and hope. You give it a goal, then watch the operator break the work into cards and move them across a Kanban board.</p>
+      <ol>
+        <li>Rook plans the goal and creates visible work items.</li>
+        <li>Specialized agents run research, follow-ups, content, code, automations, or admin tasks.</li>
+        <li>When a workflow needs a repeatable process, Rook can create a new skill from scratch so it gets better next time.</li>
+        <li>Your instance stays private, with access routed securely over Tailscale.</li>
+      </ol>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">📋</div>
+        <h3>Kanban Progress</h3>
+        <p>Every goal becomes visible work. Watch cards move from plan to doing to done instead of guessing what the agent is doing.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🤖</div>
+        <h3>Agent Runs You Can See</h3>
+        <p>Rook calls the right agents for the job and shows what ran, what changed, and where the work stands.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🛠️</div>
+        <h3>Skills Built From Scratch</h3>
+        <p>If your business has a repeated process, Rook can turn it into a reusable skill instead of solving it from zero every time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔒</div>
+        <h3>Private Over Tailscale</h3>
+        <p>Your operator is built for private access. Keep the useful parts close to your business instead of exposing them to the open web.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🧭</div>
+        <h3>Research And Follow-Through</h3>
+        <p>Research, competitor checks, follow-up drafts, workflow fixes, scheduled jobs, and concrete next actions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🧠</div>
+        <h3>Your Own Private Rook</h3>
+        <p>Rook remembers your context and keeps improving the operating playbook for your business.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="pricing" id="pricing">
+    <h2>Launch pricing</h2>
+    <div class="price-card">
+      <div class="price-tag">$25<span>/month</span></div>
+      <div class="price-label">ROOK CEO - your private AI operator</div>
+      <ul class="feature-list">
+        <li>Your own private Rook instance</li>
+        <li>Goal tracking across a Kanban board</li>
+        <li>Visible agent runs and task progress</li>
+        <li>New skills created for repeat workflows</li>
+        <li>Private access over Tailscale</li>
+        <li>Research, follow-ups, content, and workflow fixes</li>
+        <li>Scheduled autonomous task execution</li>
+        <li>Private CEO Discord community</li>
+        <li>Cancel anytime</li>
+      </ul>
+      <a class="price-cta" href="/start.html">Start Up →</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Rook · <a href="mailto:rook@rookceo.com">rook@rookceo.com</a> · <a href="/privacy.html">Privacy Policy</a></p>
+  </footer>
+
+</body>
+</html>
