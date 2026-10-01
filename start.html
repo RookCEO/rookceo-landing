@@ -337,26 +337,32 @@
       }
     }
 
-    async function sendLeadInBackground(payload) {
+    // Returns true once a request reached the server. The request is
+    // no-cors, so the reply itself is unreadable, but an unreachable server
+    // (bad DNS, timeout, offline) still rejects, and that must not be shown
+    // as a successful signup.
+    async function deliverLead(payload) {
       for (const endpoint of WAITLIST_ENDPOINTS) {
         try {
-          const data = await postWaitlistLead(endpoint, payload);
-          const status = data?.message?.status;
-          if (status === 'ok' || status === 'exists' || status === 'sent') {
-            saveSignupState({ signedUp: true, email: payload.email || '', source: payload.source || '', at: Date.now(), optimistic: true, deliveryAttempted: true });
-            return;
-          }
+          await postWaitlistLead(endpoint, payload);
+          return true;
         } catch (e) {
-          console.warn('Background signup delivery failed', endpoint, e);
+          console.warn('Signup delivery failed', endpoint, e);
         }
       }
+      return false;
     }
 
-    function optimisticSubmit(payload) {
+    async function submitSignup(payload) {
       lockUi(true);
-      showOptimisticSuccess('Your spot is being secured now. We\'ll reach out when your Rook CEO early access spot is ready.', payload.email, payload.source);
+      const delivered = await deliverLead(payload);
       lockUi(false);
-      sendLeadInBackground(payload);
+      if (delivered) {
+        showOptimisticSuccess('We\'ll reach out when your Rook CEO early access spot is ready.', payload.email, payload.source);
+      } else {
+        setStatus('error', 'We couldn\'t reach our signup server.',
+          'Please try again in a minute, or email rook@rookceo.com and we\'ll add you by hand.');
+      }
     }
 
     form.addEventListener('submit', function(e) {
@@ -372,7 +378,7 @@
         setStatus('error', 'Email needed.', 'Please enter a valid email address to join the waitlist.');
         return;
       }
-      optimisticSubmit({ email, name, source: 'rookceo-start-email' });
+      submitSignup({ email, name, source: 'rookceo-start-email' });
     });
 
     function decodeJwt(token) {
@@ -389,7 +395,7 @@
       }
       try {
         const profile = decodeJwt(response.credential);
-        optimisticSubmit({ email: profile.email, name: profile.name || '', source: 'rookceo-start-google' });
+        submitSignup({ email: profile.email, name: profile.name || '', source: 'rookceo-start-google' });
       } catch (e) {
         setStatus('error', 'Google sign-in failed.', 'Please try Google again or use email instead.');
         lockUi(false);
