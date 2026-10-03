@@ -320,47 +320,58 @@
       return body;
     }
 
+    // ERPNext sends CORS headers for https://rookceo.com, so the reply is
+    // readable. A signup only counts once the server says "ok" or "exists";
+    // anything else (rate limit, server error, bad reply) is shown as an
+    // error instead of a false "you're on the list".
     async function postWaitlistLead(endpoint, payload) {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), WAITLIST_DELIVERY_TIMEOUT_MS);
       try {
-        await fetch(endpoint, {
+        const res = await fetch(endpoint, {
           method: 'POST',
-          mode: 'no-cors',
+          mode: 'cors',
           body: encodeWaitlistPayload(payload),
-          signal: controller.signal,
-          keepalive: true
+          signal: controller.signal
         });
-        return { message: { status: 'sent' } };
+        let status = '';
+        try { status = (await res.json())?.message?.status || ''; } catch {}
+        return { httpStatus: res.status, status };
       } finally {
         clearTimeout(timeout);
       }
     }
 
-    // Returns true once a request reached the server. The request is
-    // no-cors, so the reply itself is unreadable, but an unreachable server
-    // (bad DNS, timeout, offline) still rejects, and that must not be shown
-    // as a successful signup.
+    // Returns 'ok', 'exists', 'busy' (rate limited) or 'failed'.
     async function deliverLead(payload) {
+      let outcome = 'failed';
       for (const endpoint of WAITLIST_ENDPOINTS) {
         try {
-          await postWaitlistLead(endpoint, payload);
-          return true;
+          const r = await postWaitlistLead(endpoint, payload);
+          if (r.httpStatus === 200 && (r.status === 'ok' || r.status === 'exists')) return r.status;
+          if (r.httpStatus === 429) outcome = 'busy';
+          console.warn('Signup rejected', endpoint, r);
         } catch (e) {
           console.warn('Signup delivery failed', endpoint, e);
         }
       }
-      return false;
+      return outcome;
     }
 
     async function submitSignup(payload) {
       lockUi(true);
-      const delivered = await deliverLead(payload);
+      const result = await deliverLead(payload);
       lockUi(false);
-      if (delivered) {
+      if (result === 'ok') {
         showOptimisticSuccess('We\'ll reach out when your Rook CEO early access spot is ready.', payload.email, payload.source);
+      } else if (result === 'exists') {
+        saveSignupState({ signedUp: true, email: payload.email || '', source: payload.source || '', at: Date.now() });
+        showSignedUpState('That email is already on the Rook CEO early access list.');
+      } else if (result === 'busy') {
+        setStatus('error', 'Our signup server is busy.',
+          'Please try again in a few minutes, or email rook@rookceo.com and we\'ll add you by hand.');
       } else {
-        setStatus('error', 'We couldn\'t reach our signup server.',
+        setStatus('error', 'We couldn\'t complete your signup.',
           'Please try again in a minute, or email rook@rookceo.com and we\'ll add you by hand.');
       }
     }
